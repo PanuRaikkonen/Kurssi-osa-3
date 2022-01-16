@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="assets/styles.css" />
   </head>
   <body>
-    <p>
-      Hello! Open the developer tools, please.<br />
-      Start by editing the files in <code>src/</code> folder.
-    </p>
+    <header>
+      <h1>Menu</h1>
+    </header>
+    <main>
+      <p id="">
+        <button id="language">Change Language</button>
+        <button id="sort">Sort</button>
+        <button id="random">Random</button>
+      </p>
+
+      <ul id="menu"></ul>
+
+      <a id="random1"></a>
+    </main>
   </body>
 </html>
