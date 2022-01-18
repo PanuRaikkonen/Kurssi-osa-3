@@ -1,93 +1,97 @@
-const coursesEn = [
-  "Hamburger, cream sauce and poiled potates",
-  "Goan style fish curry and whole grain rice",
-  "Vegan Chili sin carne and whole grain rice",
-  "Broccoli puree soup, side salad with two napas",
-  "Lunch baguette with BBQ-turkey filling",
-  "Cheese / Chicken / Vege / Halloum burger and french fries",
-];
-const coursesFi = [
-  "Jauhelihapihvi, ruskeaa kermakastiketta ja keitettyä perunaa",
-  "Goalaista kalacurrya ja täysjyväriisiä",
-  "vegaani Chili sin carne ja täysjyväriisi",
-  "Parsakeittoa,lisäkesalaatti kahdella napaksella",
-  "Lunch baguette with BBQ-turkey filling",
-  "Juusto / Kana / Kasvis / Halloumi burgeri ja ranskalaiset",
-];
+import LunchMenu from "./assets/sodexo-day-example.json";
 
-const menu = document.querySelector("#menu");
-//Tyhjennä menu
-const clearMenu = (owner) => {
-  while (owner.firstChild) owner.removeChild(owner.lastChild);
-};
+const coursesEn = [];
+const coursesFi = [];
+let curLang = "en";
+let currentMenu = coursesEn;
 
-//Rakenna menu
-const createMenu = (objects, owner) => {
-  clearMenu(owner);
-
-  for (const object of objects) {
-    const menuObject = document.createElement("li");
-    menuObject.textContent = object;
-    owner.appendChild(menuObject);
+/**
+ * Extract courses titles from Sodexo menu JSON course
+ *
+ * @param {string} menu - JSON menu to be parsed
+ */
+const parseSodexoMenu = (menu) => {
+  const courses = Object.values(menu);
+  for (const course of courses) {
+    coursesEn.push(course.title_en);
+    coursesFi.push(course.title_fi);
   }
 };
 
-createMenu(coursesEn, menu);
+/**
+ * Renders menu courses on page
+ *
+ */
+const createMenu = () => {
+  const ulElement = document.querySelector("#menu");
+  ulElement.innerHTML = "";
+  for (const item of currentMenu) {
+    const listElement = document.createElement("li");
+    listElement.textContent = item;
+    ulElement.appendChild(listElement);
+  }
+};
 
-//Vaihda Kieltä
-const chLang = document.querySelector("#language");
-let curLang = "en";
-
-chLang.addEventListener("click", () => {
+/**
+ * Switches language of menu on page
+ *
+ */
+const switchLang = () => {
   if (curLang === "fi") {
     curLang = "en";
-    createMenu(coursesEn, menu);
-    random.removeChild(random);
-  } else if (curLang === "en") {
-    curLang = "fi";
-    createMenu(coursesFi, menu);
-  }
-});
-//Lajittele menun objektit
-const sortMenu = (menu, order) => {
-  if (order) {
-    return menu.sort((a, b) => {
-      return a.localeCompare(b);
-    });
+    currentMenu = coursesEn;
   } else {
-    return menu.sort((a, b) => {
-      return b.localeCompare(a);
-    });
+    curLang = "fi";
+    currentMenu = coursesFi;
   }
 };
 
-//Nykyinen menu
-const CurrentMenu = (menu) => {
-  const array = [];
-  for (childNode of menu.childNodes) {
-    array.push(childNode.textContent);
+/**
+ * Sorts menu courses on page
+ *
+ * @param {Array} menu - menu array
+ * @param {string} order - 'asc' / 'desc'
+ * @returns {Array} - sorted menu
+ */
+const sortMenu = (menu, order = "asc") => {
+  const sortedMenu = menu.sort();
+  if (order === "desc") {
+    sortedMenu.reverse();
   }
-  return array;
+  return sortedMenu;
 };
 
-const sort = document.querySelector("#sort");
-let order = true;
-
-sort.addEventListener("click", () => {
-  createMenu(sortMenu(CurrentMenu(menu), order), menu);
-  order = order ? false : true;
-});
-
-//Random Ruoka
-const random = document.querySelector("#random");
-
+/**
+ * Pick random dish
+ *
+ * @param {Array} menu - menu
+ * @returns {string} - random item
+ */
 const randomItem = (menu) => {
-  const RI = [Math.floor(Math.random() * menu.childNodes.length)];
-  const rando = menu.childNodes[RI];
-  return rando.textContent;
+  const randomIndex = [Math.floor(Math.random() * menu.length)];
+  return menu[randomIndex];
 };
 
-random.addEventListener("click", () => {
-  document.querySelector("#random1").innerHTML =
-    "Random Dish: " + randomItem(menu);
-});
+/**
+ * Initialize application
+ */
+const init = () => {
+  parseSodexoMenu(LunchMenu.courses);
+  createMenu();
+
+  document.querySelector("#language").addEventListener("click", () => {
+    switchLang();
+    createMenu();
+  });
+
+  document.querySelector("#sort").addEventListener("click", () => {
+    currentMenu = sortMenu(currentMenu, "asc");
+    createMenu();
+  });
+
+  document.querySelector("#random").addEventListener("click", () => {
+    document.querySelector("#random1").innerHTML =
+      "Random Dish: " + randomItem(currentMenu);
+  });
+};
+init();
