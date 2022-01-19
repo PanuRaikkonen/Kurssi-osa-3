@@ -10,6 +10,8 @@ const coursesFi = [];
  */
 const parseSodexoMenu = (menu) => {
   const courses = Object.values(menu);
+  // console.log(menu);
+
   for (const course of courses) {
     coursesEn.push(course.title_en);
     coursesFi.push(course.title_fi);
