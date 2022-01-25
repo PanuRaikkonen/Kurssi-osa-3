@@ -3,17 +3,17 @@ import FazerData from "./modules/fazer-data";
 
 let curLang = "en";
 // let currentMenu = SodexoData.coursesEn;
-let currentMenu = FazerData.coursesEn;
+// let currentMenu = SodexoData.coursesEn;
 
 /**
  * Renders menu courses on page
  *
  */
-const createMenu = () => {
-  const ulElement = document.querySelector("#sodexoMenu");
+const createMenu = (data, targetId) => {
+  const ulElement = document.querySelector("#" + targetId);
   // const ul1Element = document.querySelector("#fazerMenu");
   ulElement.innerHTML = "";
-  for (const item of currentMenu) {
+  for (const item of data) {
     const listElement = document.createElement("li");
     listElement.textContent = item;
     ulElement.appendChild(listElement);
@@ -27,10 +27,12 @@ const createMenu = () => {
 const switchLang = () => {
   if (curLang === "fi") {
     curLang = "en";
-    currentMenu = SodexoData.coursesEn;
+    createMenu(SodexoData.coursesEn, "sodexoMenu");
+    createMenu(FazerData.coursesEn, "fazerMenu");
   } else {
     curLang = "fi";
-    currentMenu = SodexoData.coursesFi;
+    createMenu(SodexoData.coursesFi, "sodexoMenu");
+    createMenu(FazerData.coursesFi, "fazerMenu");
   }
 };
 
@@ -64,21 +66,23 @@ const randomItem = (menu) => {
  * Initialize application
  */
 const init = () => {
-  createMenu();
+  createMenu(SodexoData.coursesFi, "sodexoMenu");
+  createMenu(FazerData.coursesFi, "fazerMenu");
 
   document.querySelector("#language").addEventListener("click", () => {
     switchLang();
-    createMenu();
-  });
-
-  document.querySelector("#sort").addEventListener("click", () => {
-    currentMenu = sortMenu(currentMenu, "asc");
-    createMenu();
   });
 
   document.querySelector("#random").addEventListener("click", () => {
     document.querySelector("#random1").innerHTML =
+      //TODO: fix random
       "Random Dish: " + randomItem(currentMenu);
+  });
+
+  document.querySelector("#sort").addEventListener("click", () => {
+    currentMenu = sortMenu(currentMenu, "asc");
+    //TODO: fix sort for both restaurant
+    // createMenu();
   });
 };
 init();

@@ -1,3 +1,11 @@
 body {
   margin: 10%;
 }
+.box {
+  border: 1px solid black;
+  max-width: 500px;
+}
+#random1 {
+  text-decoration: underline;
+  max-width: 500px;
+}

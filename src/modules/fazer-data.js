@@ -1,27 +1,29 @@
 import FazerMenuEn from "../assets/fazer-dataEn.json";
 import FazerMenuFi from "../assets/fazer-data.json";
 
-const coursesEn = [];
-const coursesFi = [];
-
 /**
- * Extract courses titles from Fazer menu JSON course
+ *Parses Fazer json data to simple array of strings
  *
- * @param {string} menu - JSON menu to be parsed
+ * @param {Array} Menus menu data
+ * @param {Number} dayOfWeek 0-6
+ * @returns {Array} daily menu
  */
-const parseFazerMenu = (menu) => {
-  const courses = Object.values(FazerMenuEn);
-
-  const test = courses.map((nested) =>
-    nested.map((element) => (element = !null))
-  );
-  // const result = courses.filter((i) => Object.values(i)[1].LunchMenus);
-
-  // const filtered = courses.filter((x) => (x = !null));
-
-  console.log(test);
+const parseFazerMenuDay = (Menus, dayOfWeek) => {
+  const dayMenu = Menus[dayOfWeek].SetMenus.map((setMenu) => {
+    const name = setMenu.Name;
+    let meals = "";
+    //TODO: clean output
+    for (const meal of setMenu.Meals) {
+      meals += meal.Name + ", ";
+    }
+    return name ? name + ": " + meals : meals;
+  });
+  return dayMenu;
 };
-parseFazerMenu(FazerMenuEn.courses);
+// console.log(parseFazerMenuDay(FazerMenuEn.LunchMenus, 0));
+
+const coursesEn = parseFazerMenuDay(FazerMenuEn.LunchMenus, 0);
+const coursesFi = parseFazerMenuDay(FazerMenuFi.LunchMenus, 0);
 
 const FazerData = { coursesEn, coursesFi };
 export default FazerData;
