@@ -36,3 +36,23 @@ const foodsAll = foods.reduce((a, b) => {
   return { price: a.price + b.price };
 });
 console.log("Reduce", foodsAll.price);
+
+//B
+
+//Push food names to array
+import FazerData from "./fazer-week-example.json";
+
+const getVegFoods = (DayOfWeek) => {
+  let vegeFoods = [];
+  for (const menu of FazerData.LunchMenus[DayOfWeek].SetMenus) {
+    for (const meal of menu.Meals) {
+      if (meal.Diets.includes("Veg")) {
+        vegeFoods.push(meal.Name);
+      }
+    }
+  }
+  return vegeFoods;
+};
+for (let i = 0; i < FazerData.LunchMenus.length; i++) {
+  console.log(getVegFoods(i));
+}
