@@ -1,9 +1,8 @@
 import SodexoData from "./modules/sodexo-data";
 import FazerData from "./modules/fazer-data";
+import { fetchData } from "./modules/network";
 
-let curLang = "en";
-// let currentMenu = SodexoData.coursesEn;
-// let currentMenu = SodexoData.coursesEn;
+let curLang = "fi";
 
 /**
  * Renders menu courses on page
@@ -11,7 +10,6 @@ let curLang = "en";
  */
 const createMenu = (data, targetId) => {
   const ulElement = document.querySelector("#" + targetId);
-  // const ul1Element = document.querySelector("#fazerMenu");
   ulElement.innerHTML = "";
   for (const item of data) {
     const listElement = document.createElement("li");
@@ -66,9 +64,27 @@ const randomItem = (menu) => {
  * Initialize application
  */
 const init = () => {
+  //TODO: switch to real sodexo api data (no need to use proxy)
+  //Update sodexo module to be similar to Fazer
   createMenu(SodexoData.coursesFi, "sodexoMenu");
-  createMenu(FazerData.coursesFi, "fazerMenu");
 
+  fetchData("https://www.sodexo.fi/ruokalistat/output/weekly_json/152").then(
+    (data) => {
+      console.log(data);
+    }
+  );
+
+  //Render Fazer
+  fetchData(FazerData.dataUrlFi, true).then((data) => {
+    //TODO: when using proxy move JSON.parse stuff to Network module??
+    const menuData = JSON.parse(data.contents);
+
+    //TODO: how to set correct weekday
+    const courses = FazerData.parseFazerMenuDay(menuData.LunchMenus, 1);
+    createMenu(courses, "fazer");
+  });
+
+  //Event listeners
   document.querySelector("#language").addEventListener("click", () => {
     switchLang();
   });

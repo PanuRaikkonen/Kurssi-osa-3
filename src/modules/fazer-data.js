@@ -1,5 +1,8 @@
-import FazerMenuEn from "../assets/fazer-dataEn.json";
-import FazerMenuFi from "../assets/fazer-data.json";
+//TODO: fix data urls: how to get menu for correct day
+const dataUrlFi =
+  "https://www.foodandco.fi/api/restaurant/menu/week?language=fi&restaurantPageId=270540&weekDate=2022-02-01";
+const dataUrlEn =
+  "https://www.foodandco.fi/api/restaurant/menu/week?language=en&restaurantPageId=270540&weekDate=2022-02-01";
 
 /**
  *Parses Fazer json data to simple array of strings
@@ -20,10 +23,6 @@ const parseFazerMenuDay = (Menus, dayOfWeek) => {
   });
   return dayMenu;
 };
-// console.log(parseFazerMenuDay(FazerMenuEn.LunchMenus, 0));
 
-const coursesEn = parseFazerMenuDay(FazerMenuEn.LunchMenus, 0);
-const coursesFi = parseFazerMenuDay(FazerMenuFi.LunchMenus, 0);
-
-const FazerData = { coursesEn, coursesFi };
+const FazerData = { parseFazerMenuDay, dataUrlFi, dataUrlEn };
 export default FazerData;
