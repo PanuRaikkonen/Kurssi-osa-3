@@ -1,88 +1,61 @@
-import SodexoData from "./modules/sodexo-data";
-import FazerData from "./modules/fazer-data";
+//1.
+const createSecret = (code) => {
+  const presses = [];
 
-let curLang = "en";
-// let currentMenu = SodexoData.coursesEn;
-// let currentMenu = SodexoData.coursesEn;
+  document.addEventListener("keypress", (event) => {
+    presses.push(event.key);
 
-/**
- * Renders menu courses on page
- *
- */
-const createMenu = (data, targetId) => {
-  const ulElement = document.querySelector("#" + targetId);
-  // const ul1Element = document.querySelector("#fazerMenu");
-  ulElement.innerHTML = "";
-  for (const item of data) {
-    const listElement = document.createElement("li");
-    listElement.textContent = item;
-    ulElement.appendChild(listElement);
-  }
-};
-
-/**
- * Switches language of menu on page
- *
- */
-const switchLang = () => {
-  if (curLang === "fi") {
-    curLang = "en";
-    createMenu(SodexoData.coursesEn, "sodexoMenu");
-    createMenu(FazerData.coursesEn, "fazerMenu");
-  } else {
-    curLang = "fi";
-    createMenu(SodexoData.coursesFi, "sodexoMenu");
-    createMenu(FazerData.coursesFi, "fazerMenu");
-  }
-};
-
-/**
- * Sorts menu courses on page
- *
- * @param {Array} menu - menu array
- * @param {string} order - 'asc' / 'desc'
- * @returns {Array} - sorted menu
- */
-const sortMenu = (menu, order = "asc") => {
-  const sortedMenu = menu.sort();
-  if (order === "desc") {
-    sortedMenu.reverse();
-  }
-  return sortedMenu;
-};
-
-/**
- * Pick random dish
- *
- * @param {Array} menu - menu
- * @returns {string} - random item
- */
-const randomItem = (menu) => {
-  const randomIndex = [Math.floor(Math.random() * menu.length)];
-  return menu[randomIndex];
-};
-
-/**
- * Initialize application
- */
-const init = () => {
-  createMenu(SodexoData.coursesFi, "sodexoMenu");
-  createMenu(FazerData.coursesFi, "fazerMenu");
-
-  document.querySelector("#language").addEventListener("click", () => {
-    switchLang();
-  });
-
-  document.querySelector("#random").addEventListener("click", () => {
-    document.querySelector("#random1").innerHTML =
-      //TODO: fix random
-      "Random Dish: " + randomItem(currentMenu);
-  });
-
-  document.querySelector("#sort").addEventListener("click", () => {
-    currentMenu = sortMenu(currentMenu, "asc");
-    //TODO: fix sort for both restaurant
-    // createMenu();
+    if (presses.length > code.length) {
+      presses.shift();
+    }
+    console.log(presses);
+    if (presses.join("") === code) {
+      alert("Kirjoitit hello");
+    }
   });
 };
-init();
+createSecret("hello");
+
+//2.
+const cords = () => {
+  const coords = document.querySelector("#coords");
+
+  document.addEventListener("dblclick", (event) => {
+    coords.textContent = `X:  ${event.clientX}, Y: ${event.clientY}`;
+  });
+};
+cords();
+
+//3.
+const touch = () => {
+  document.querySelector("h1").addEventListener("touchstart", (event) => {
+    console.log("toimii");
+  });
+};
+touch();
+
+//4.
+const timer = (delay) => {
+  const time = document.querySelector("#time");
+  setTimeout(() => {
+    time.textContent = "Out of Time";
+  }, delay * 1000);
+};
+// timer(15);
+
+//5.
+const timerIdle = (delay) => {
+  const time = document.querySelector("#time");
+  let timer;
+
+  const timerReset = (event) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      time.textContent = "Out of Time";
+    }, delay * 1000);
+  };
+  timerReset();
+  document.addEventListener("mousemove", timerReset);
+  document.addEventListener("touchstart", timerReset);
+};
+timerIdle(5);
