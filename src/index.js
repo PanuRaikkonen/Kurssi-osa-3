@@ -74,10 +74,9 @@ const init = () => {
     }
   );
 
-  //Render Fazer
-  fetchData(FazerData.dataUrlFi, true).then((data) => {
-    //TODO: when using proxy move JSON.parse stuff to Network module??
-    const menuData = JSON.parse(data.contents);
+  //Render Fazer - "allorigins" or "fazer-php"
+  fetchData(FazerData.dataUrlFi, "fazer-php").then((data) => {
+    const menuData = data;
 
     //TODO: how to set correct weekday
     const courses = FazerData.parseFazerMenuDay(menuData.LunchMenus, 1);
