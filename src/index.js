@@ -1,6 +1,7 @@
 import SodexoData from "./modules/sodexo-data";
 import FazerData from "./modules/fazer-data";
 import { fetchData } from "./modules/network";
+import { getTodayIndex } from "./modules/tools";
 
 let curLang = "fi";
 
@@ -64,23 +65,23 @@ const randomItem = (menu) => {
  * Initialize application
  */
 const init = () => {
-  //TODO: switch to real sodexo api data (no need to use proxy)
+  //TODO:
   //Update sodexo module to be similar to Fazer
-  createMenu(SodexoData.coursesFi, "sodexoMenu");
-
-  fetchData("https://www.sodexo.fi/ruokalistat/output/weekly_json/152").then(
-    (data) => {
-      console.log(data);
-    }
-  );
+  fetchData(SodexoData.dataUrlDaily).then((data) => {
+    console.log("sodexo", data);
+    const courses = SodexoData.parseDayMenu(data.courses);
+    createMenu(courses, "sodexoMenu");
+  });
 
   //Render Fazer - "allorigins" or "fazer-php"
   fetchData(FazerData.dataUrlFi, "fazer-php").then((data) => {
-    const menuData = data;
-
+    console.log("fazer", data);
     //TODO: how to set correct weekday
-    const courses = FazerData.parseFazerMenuDay(menuData.LunchMenus, 1);
-    createMenu(courses, "fazer");
+    const courses = FazerData.parseFazerMenuDay(
+      data.LunchMenus,
+      getTodayIndex()
+    );
+    createMenu(courses, "fazerMenu");
   });
 
   //Event listeners

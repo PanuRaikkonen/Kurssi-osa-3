@@ -3,6 +3,8 @@
  *
  * @param {string} url - api endpoint url
  * @param {string} useProxy - optional proxy server
+ *
+ * @returns {Object} response json data
  */
 const fetchData = async (url, useProxy) => {
   if (useProxy === "allorigins") {
@@ -17,7 +19,7 @@ const fetchData = async (url, useProxy) => {
     if (!response.ok) {
       throw new Error(`HTTP ${response.status} - ${response.statusText}`);
     }
-    jsonDAta = await response.json();
+    jsonData = await response.json();
     //Allorigins returns json payload in data.contents property as a string
     if (useProxy === "allorigins") {
       jsonData = JSON.parse(jsonData.contents);
